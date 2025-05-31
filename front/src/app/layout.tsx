@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { ToastifyContainer } from "@/components/shared/ToastifyContainer";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 
@@ -21,7 +22,7 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         >
           {children}
         </ThemeProvider>
+        <ToastifyContainer />
       </body>
     </html>
   );

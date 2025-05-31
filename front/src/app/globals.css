@@ -1,5 +1,13 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-body {
-  font-family: "Inter", sans-serif;
+@theme {
+  --color-primary: #004B7A;
+  --color-primary-dark: #003052;
+  --color-primary-light: #ADC5D4;
+  --color-secondary: #FFFFFF;
+  --color-success: #1BCFB4;
+  --color-error: #CA2E24;
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
 }
