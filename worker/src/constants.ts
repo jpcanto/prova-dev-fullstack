@@ -1,0 +1,1 @@
+export const TMDB_FETCH_INTERVAL_MS = 60000; 
