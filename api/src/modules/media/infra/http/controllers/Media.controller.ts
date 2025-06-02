@@ -10,6 +10,17 @@ import {
 } from '@modules/media/infra/http/controllers/schemas/schemas';
 import { parseRequest } from '@shared/utils/parseRequest';
 import { MediaCreatorUsecase } from '@modules/media/domain/usecases/MediaCreator.usecase';
+import { MediaFinderTopRatedUsecase } from '@modules/media/domain/usecases/MediaFinderTopRated.usecase';
+import { z } from 'zod';
+import {
+  Media,
+  UpdateMediaIn,
+} from '@modules/media/domain/models/Media.interface';
+
+const findTopRatedSchema = z.object({
+  mediaType: z.union([z.literal('movie'), z.literal('tv')]).optional(),
+});
+
 export class MediaController {
   private mediaRepository: MediaRepository;
 
@@ -28,12 +39,13 @@ export class MediaController {
 
   public async show(request: Request, response: Response): Promise<Response> {
     const { id } = parseRequest(idFromParamsSchema, request.params);
-    const showMedia = new MediaFinderUsecase({
+    const findMedia = new MediaFinderUsecase({
       mediaRepository: this.mediaRepository,
     });
-    const media = await showMedia.execute({ id });
 
-    return response.json(media);
+    const media = await findMedia.execute({ id });
+
+    return media ? response.json(media) : response.status(404).send();
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
@@ -45,6 +57,7 @@ export class MediaController {
       poster_path,
       release_date,
       title,
+      mediaType,
     } = parseRequest(createSchema, request.body);
 
     const createMedia = new MediaCreatorUsecase({
@@ -59,37 +72,21 @@ export class MediaController {
       poster_path,
       release_date,
       title,
+      mediaType,
     });
 
     return response.json(media);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const {
-      original_language,
-      original_title,
-      overview,
-      popularity,
-      poster_path,
-      release_date,
-      title,
-    } = parseRequest(updateSchema, request.body);
+    const updateData = parseRequest(updateSchema, request.body);
     const { id } = parseRequest(idFromParamsSchema, request.params);
 
     const updateMedia = new MediaUpdaterUsecase({
       mediaRepository: this.mediaRepository,
     });
 
-    const media = await updateMedia.execute({
-      id,
-      original_language,
-      original_title,
-      overview,
-      popularity,
-      poster_path,
-      release_date,
-      title,
-    });
+    const media = await updateMedia.execute({ ...updateData, id });
 
     return response.json(media);
   }
@@ -104,5 +101,18 @@ export class MediaController {
     await deleteMedia.execute({ id });
 
     return response.json([]);
+  }
+
+  public async indexTopRated(
+    request: Request,
+    response: Response
+  ): Promise<Response> {
+    const { mediaType } = parseRequest(findTopRatedSchema, request.query);
+    const listTopRatedMedia = new MediaFinderTopRatedUsecase({
+      mediaRepository: this.mediaRepository,
+    });
+    const medias = await listTopRatedMedia.execute({ mediaType });
+
+    return response.json(medias);
   }
 }

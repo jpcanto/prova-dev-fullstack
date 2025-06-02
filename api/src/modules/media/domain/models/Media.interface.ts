@@ -11,6 +11,7 @@ export interface Media {
   title: string;
   createdAt?: Date;
   updatedAt?: Date;
+  mediaType: 'movie' | 'tv';
 }
 
 export interface MediaIn {
@@ -21,6 +22,7 @@ export interface MediaIn {
   poster_path: string;
   release_date: string;
   title: string;
+  mediaType: 'movie' | 'tv';
 }
 
 export interface UpdateMediaIn {
@@ -32,6 +34,7 @@ export interface UpdateMediaIn {
   poster_path: string;
   release_date: string;
   title: string;
+  mediaType: 'movie' | 'tv';
 }
 
 export interface MediaModuleDependenciesIn {

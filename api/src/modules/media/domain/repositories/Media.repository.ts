@@ -11,4 +11,5 @@ export interface MediaRepository {
   save(media: MediaImpl): Promise<void>;
   remove(id: string): Promise<void>;
   find(): Promise<MediaImpl[]>;
+  findTopRated(mediaType?: 'movie' | 'tv'): Promise<MediaImpl[]>;
 }

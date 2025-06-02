@@ -14,6 +14,7 @@ type MediaCreateIn = Partial<Media> & {
   title: string;
   createdAt?: Date;
   updatedAt?: Date;
+  mediaType: 'movie' | 'tv';
 };
 
 export class MediaImpl {
@@ -37,6 +38,7 @@ export class MediaImpl {
       title: props?.title,
       createdAt: props?.createdAt || DateUtils.getTimeInBrazil(),
       updatedAt: props?.updatedAt || DateUtils.getTimeInBrazil(),
+      mediaType: props.mediaType
     });
   }
 
@@ -53,6 +55,8 @@ export class MediaImpl {
     if (!props.release_date)
       throw new BadRequest('release_date não pode ser vazio.');
     if (!props.title) throw new BadRequest('title não pode ser vazio.');
+    if (!props.mediaType || (props.mediaType !== 'movie' && props.mediaType !== 'tv'))
+      throw new BadRequest('mediaType inválido. Deve ser \'movie\' ou \'tv\'.');
   }
 
   get id() {
@@ -127,6 +131,14 @@ export class MediaImpl {
     this.props.updatedAt = value;
   }
 
+  get mediaType() {
+    return this.props.mediaType;
+  }
+
+  set mediaType(value: 'movie' | 'tv') {
+    this.props.mediaType = value;
+  }
+
   toJson(): Media {
     return {
       id: this.id,
@@ -139,6 +151,7 @@ export class MediaImpl {
       title: this.title,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      mediaType: this.mediaType,
     };
   }
 }

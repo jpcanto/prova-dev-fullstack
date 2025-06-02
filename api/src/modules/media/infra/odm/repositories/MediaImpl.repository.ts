@@ -29,41 +29,79 @@ export class MediaRepositoryImpl implements MediaRepository {
   async find(): Promise<MediaImpl[]> {
     const medias = await this.collection.find().toArray();
     return medias.map(media =>
-      MediaImpl.create(media)
+      MediaImpl.create({
+        ...media,
+        mediaType: media.mediaType || 'movie',
+      } as any)
     );
   }
 
   async findByName(name: string): Promise<MediaImpl | null> {
     const media = await this.collection.findOne({ name });
-    return media ? MediaImpl.create(media) : null;
+    return media
+      ? MediaImpl.create({
+          ...media,
+          mediaType: media.mediaType || 'movie',
+        } as any)
+      : null;
   }
 
   async findById(id: string): Promise<MediaImpl | null> {
     const media = await this.collection.findOne({
       _id: new ObjectId(id),
     });
-    return media ? MediaImpl.create(media) : null;
+    return media
+      ? MediaImpl.create({
+          ...media,
+          mediaType: media.mediaType || 'movie',
+        } as any)
+      : null;
   }
 
   async findByUUID(id: string): Promise<MediaImpl | null> {
     const media = await this.collection.findOne({
       id: id,
     });
-    return media ? MediaImpl.create(media) : null;
+    return media
+      ? MediaImpl.create({
+          ...media,
+          mediaType: media.mediaType || 'movie',
+        } as any)
+      : null;
   }
 
   async findByEmail(email: string): Promise<MediaImpl | null> {
     const media = await this.collection.findOne({ email });
-    return media ? MediaImpl.create(media) : null;
+    return media
+      ? MediaImpl.create({
+          ...media,
+          mediaType: media.mediaType || 'movie',
+        } as any)
+      : null;
   }
 
   async findByPhone(phone: string): Promise<MediaImpl | null> {
     const media = await this.collection.findOne({ phone });
-    return media ? MediaImpl.create(media) : null;
+    return media
+      ? MediaImpl.create({
+          ...media,
+          mediaType: media.mediaType || 'movie',
+        } as any)
+      : null;
   }
 
   async findByIds(ids: string[]): Promise<MediaImpl[]> {
     const medias = await this.collection.find({ id: { $in: ids } }).toArray();
-    return medias.map(media => MediaImpl.create(media));
+    return medias.map(media =>
+      MediaImpl.create({
+        ...media,
+        mediaType: media.mediaType || 'movie',
+      } as any)
+    );
+  }
+
+  async findTopRated(mediaType?: 'movie' | 'tv'): Promise<MediaImpl[]> {
+    console.warn('findTopRated not implemented in repository');
+    return [];
   }
 }
